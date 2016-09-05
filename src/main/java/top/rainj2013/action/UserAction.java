@@ -1,9 +1,7 @@
 package top.rainj2013.action;
 
-import org.mvc.annotation.Action;
-import org.mvc.annotation.Json;
-import org.mvc.annotation.Ok;
-import org.mvc.annotation.Param;
+import org.mvc.annotation.*;
+import org.mvc.upload.TempFile;
 import top.rainj2013.bean.User;
 
 /**
@@ -19,12 +17,23 @@ public class UserAction {
         return user;
     }
 
-    @Action
-    @Ok("->:/index.jsp")
-    public String login(@Param("name")String name, @Param("password")int password){
-        String result = String.format("用户名：%s,密码：%d", name, password);
+    @GET
+    @Ok("->:|jsp|login.jsp")
+    public void login() {}
+
+    @POST
+    @Json
+    public Object login(@Param("username")String username, @Param("password")int password) {
+        String result = String.format("用户名：%s,密码：%d", username, password);
         System.out.printf(result);
         return result;
+    }
+
+    @Action
+    @Upload("/config.js")
+    @Ok("->:/index.jsp")
+    public String upload(@Param("file1") TempFile tf1, @Param("file2") TempFile tf2, @Param("description") String description) {
+        return tf1.getPath() + "<br>" + tf2.getPath() + "<br>" + description;
     }
 
 }
